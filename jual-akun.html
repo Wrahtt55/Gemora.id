@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jual Akun - Gemora.id</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="main-header">
+        <div class="header-content">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <h1>Gemora.id</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <button class="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="jual-akun.html"><i class="fas fa-gamepad"></i> Jual Akun</a></li>
+            <li><a href="artikel.html"><i class="fas fa-newspaper"></i> Berita/Artikel</a></li>
+        </ul>
+        <div class="auth-buttons">
+            <button id="login-btn" class="btn">Login</button>
+            <button id="logout-btn" class="btn" style="display:none;">Logout</button>
+        </div>
+    </aside>
+
+    <!-- Overlay for sidebar -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="upload-section">
+            <h2><i class="fas fa-upload"></i> Jual Akun Game</h2>
+            <div class="auth-required" id="auth-required">
+                <p>Anda harus login sebagai reseller untuk mengakses halaman ini.</p>
+                <button id="show-login" class="btn">Login Sekarang</button>
+            </div>
+            
+            <form id="upload-form" class="upload-form" style="display:none;">
+                <div class="form-group">
+                    <label for="product-image">Gambar Produk</label>
+                    <input type="file" id="product-image" accept="image/*" required>
+                    <div class="image-preview" id="image-preview"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-title">Judul Produk</label>
+                    <input type="text" id="product-title" placeholder="Contoh: Akun FF Sultan Level 70" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-slogan">Slogan (Opsional)</label>
+                    <input type="text" id="product-slogan" placeholder="Contoh: Murah Meriah">
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-desc">Deskripsi Lengkap</label>
+                    <textarea id="product-desc" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-spec">Spesifikasi Akun</label>
+                    <textarea id="product-spec" rows="4" placeholder="Level, Item, Skin, dll" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-price">Harga (Rp)</label>
+                    <input type="number" id="product-price" min="1000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="game-category">Kategori Game</label>
+                    <select id="game-category" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="Free Fire">Free Fire</option>
+                        <option value="Mobile Legends">Mobile Legends</option>
+                        <option value="PUBG Mobile">PUBG Mobile</option>
+                        <option value="Valorant">Valorant</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="seller-wa">Nomor WhatsApp Anda</label>
+                    <input type="tel" id="seller-wa" placeholder="6281234567890" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-paper-plane"></i> Kirim ke Admin
+                    </button>
+                </div>
+                
+                <div class="form-note">
+                    <p><i class="fas fa-info-circle"></i> Produk akan diverifikasi admin sebelum ditampilkan.</p>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-content">
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <h3>Login Reseller</h3>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+                <div class="login-note">
+                    <p>Hanya untuk reseller yang terdaftar.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        // Check auth status when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const authRequired = document.getElementById('auth-required');
+            const uploadForm = document.getElementById('upload-form');
+            
+            if (isLoggedIn) {
+                authRequired.style.display = 'none';
+                uploadForm.style.display = 'block';
+            } else {
+                authRequired.style.display = 'block';
+                uploadForm.style.display = 'none';
+            }
+            
+            // Image preview
+            const imageInput = document.getElementById('product-image');
+            const imagePreview = document.getElementById('image-preview');
+            
+            imageInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Form submission
+            const uploadFormElement = document.getElementById('upload-form');
+            uploadFormElement.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // In a real implementation, this would upload to server
+                // For this demo, we'll simulate sending to admin via WhatsApp
+                const productData = {
+                    title: document.getElementById('product-title').value,
+                    slogan: document.getElementById('product-slogan').value,
+                    desc: document.getElementById('product-desc').value,
+                    spec: document.getElementById('product-spec').value,
+                    price: document.getElementById('product-price').value,
+                    category: document.getElementById('game-category').value,
+                    wa: document.getElementById('seller-wa').value,
+                    image: imagePreview.querySelector('img')?.src || ''
+                };
+                
+                // Create WhatsApp message
+                let message = `*NEW PRODUCT SUBMISSION*\n\n`;
+                message += `*Judul:* ${productData.title}\n`;
+                if (productData.slogan) message += `*Slogan:* ${productData.slogan}\n`;
+                message += `*Deskripsi:* ${productData.desc}\n`;
+                message += `*Spesifikasi:* ${productData.spec}\n`;
+                message += `*Harga:* Rp${parseInt(productData.price).toLocaleString('id-ID')}\n`;
+                message += `*Kategori:* ${productData.category}\n`;
+                message += `*Nomor WA Penjual:* ${productData.wa}\n\n`;
+                message += `_Silakan verifikasi dan tambahkan ke produk.json_`;
+                
+                // Encode for WhatsApp URL
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/6281234567890?text=${encodedMessage}`;
+                
+                // Open WhatsApp
+                window.open(whatsappUrl, '_blank');
+                
+                // Reset form
+                uploadFormElement.reset();
+                imagePreview.innerHTML = '';
+                
+                // Show success message
+                alert('Produk telah dikirim ke admin untuk verifikasi. Admin akan menghubungi Anda melalui WhatsApp.');
+            });
+            
+            // Show login modal
+            document.getElementById('show-login').addEventListener('click', function() {
+                document.getElementById('login-modal').style.display = 'flex';
+            });
+        });
+    </script>
+</body>
+</html>
