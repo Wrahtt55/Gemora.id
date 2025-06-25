@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berita/Artikel - Gemora.id</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="main-header">
+        <div class="header-content">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <h1>Gemora.id</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <button class="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="jual-akun.html"><i class="fas fa-gamepad"></i> Jual Akun</a></li>
+            <li><a href="artikel.html"><i class="fas fa-newspaper"></i> Berita/Artikel</a></li>
+        </ul>
+        <div class="auth-buttons">
+            <button id="login-btn" class="btn">Login</button>
+            <button id="logout-btn" class="btn" style="display:none;">Logout</button>
+        </div>
+    </aside>
+
+    <!-- Overlay for sidebar -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="articles-section">
+            <h2><i class="fas fa-newspaper"></i> Berita & Artikel Terbaru</h2>
+            <div class="articles-container" id="articles-container">
+                <!-- Articles will be loaded here by JS -->
+                <div class="loading-spinner"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Article Detail Modal -->
+    <div class="modal-overlay" id="article-modal">
+        <div class="modal-content">
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+            <div class="modal-body" id="article-modal-body">
+                <!-- Article details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-content">
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <h3>Login Reseller</h3>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+                <div class="login-note">
+                    <p>Hanya untuk reseller yang terdaftar.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        // Load articles
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('data/articles.json')
+                .then(response => response.json())
+                .then(articles => {
+                    const container = document.getElementById('articles-container');
+                    container.innerHTML = '';
+                    
+                    if (articles.length === 0) {
+                        container.innerHTML = '<p class="no-articles">Belum ada artikel tersedia.</p>';
+                        return;
+                    }
+                    
+                    articles.forEach(article => {
+                        const articleEl = document.createElement('div');
+                        articleEl.className = 'article-card';
+                        articleEl.innerHTML = `
+                            <div class="article-image" style="background-image: url('${article.image || 'images/default-article.jpg'}')"></div>
+                            <div class="article-content">
+                                <h3>${article.judul}</h3>
+                                <div class="article-meta">
+                                    <span><i class="far fa-calendar-alt"></i> ${article.tanggal}</span>
+                                    <span><i class="far fa-user"></i> ${article.penulis || 'Admin'}</span>
+                                </div>
+                                <p class="article-excerpt">${article.deskripsi.substring(0, 100)}...</p>
+                                <button class="btn btn-read-more" data-id="${article.id}">Baca Selengkapnya</button>
+                            </div>
+                        `;
+                        container.appendChild(articleEl);
+                    });
+                    
+                    // Add click event to read more buttons
+                    document.querySelectorAll('.btn-read-more').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const articleId = this.getAttribute('data-id');
+                            const article = articles.find(a => a.id == articleId);
+                            
+                            if (article) {
+                                const modalBody = document.getElementById('article-modal-body');
+                                modalBody.innerHTML = `
+                                    <h2>${article.judul}</h2>
+                                    <div class="article-meta">
+                                        <span><i class="far fa-calendar-alt"></i> ${article.tanggal}</span>
+                                        <span><i class="far fa-user"></i> ${article.penulis || 'Admin'}</span>
+                                    </div>
+                                    <div class="article-image-modal">
+                                        <img src="${article.image || 'images/default-article.jpg'}" alt="${article.judul}">
+                                    </div>
+                                    <div class="article-content-modal">
+                                        ${article.konten || article.deskripsi}
+                                    </div>
+                                `;
+                                document.getElementById('article-modal').style.display = 'flex';
+                            }
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading articles:', error);
+                    document.getElementById('articles-container').innerHTML = '<p class="error-message">Gagal memuat artikel. Silakan coba lagi nanti.</p>';
+                });
+        });
+    </script>
+</body>
+</html>
