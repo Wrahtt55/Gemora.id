@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemora.id - Marketplace Akun Game</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="main-header">
+        <div class="header-content">
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <h1>Gemora.id</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <button class="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="jual-akun.html"><i class="fas fa-gamepad"></i> Jual Akun</a></li>
+            <li><a href="artikel.html"><i class="fas fa-newspaper"></i> Berita/Artikel</a></li>
+        </ul>
+        <div class="auth-buttons">
+            <button id="login-btn" class="btn">Login</button>
+            <button id="logout-btn" class="btn" style="display:none;">Logout</button>
+        </div>
+    </aside>
+
+    <!-- Overlay for sidebar -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Banner Section -->
+        <section class="banner">
+            <div class="banner-content">
+                <h2>Selamat Datang di Gemora.id</h2>
+                <p>Tempat jual beli akun game aman dan terpercaya</p>
+                <div class="banner-slider">
+                    <div class="slide active">
+                        <p>Promo! Cashback 10% untuk pembelian pertama</p>
+                    </div>
+                    <div class="slide">
+                        <p>Garansi 100% uang kembali jika akun bermasalah</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search and Filter Section -->
+        <section class="search-filter">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Cari produk...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="filter-options">
+                <select id="game-category">
+                    <option value="">Semua Kategori</option>
+                    <option value="Free Fire">Free Fire</option>
+                    <option value="Mobile Legends">Mobile Legends</option>
+                    <option value="PUBG Mobile">PUBG Mobile</option>
+                    <option value="Valorant">Valorant</option>
+                </select>
+                <select id="price-range">
+                    <option value="">Semua Harga</option>
+                    <option value="0-100000">Rp0 - Rp100.000</option>
+                    <option value="100000-500000">Rp100.000 - Rp500.000</option>
+                    <option value="500000-1000000">Rp500.000 - Rp1.000.000</option>
+                    <option value="1000000-">> Rp1.000.000</option>
+                </select>
+                <select id="sort-by">
+                    <option value="terbaru">Terbaru</option>
+                    <option value="termurah">Termurah</option>
+                    <option value="termahal">Termahal</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Popular Products -->
+        <section class="products-section">
+            <h2><i class="fas fa-crown"></i> Produk Populer</h2>
+            <div class="products-container" id="popular-products">
+                <!-- Popular products will be loaded here by JS -->
+                <div class="loading-spinner"></div>
+            </div>
+        </section>
+
+        <!-- Regular Products -->
+        <section class="products-section">
+            <h2><i class="fas fa-gamepad"></i> Produk Terbaru</h2>
+            <div class="products-container" id="regular-products">
+                <!-- Regular products will be loaded here by JS -->
+                <div class="loading-spinner"></div>
+            </div>
+            <div class="pagination">
+                <button id="prev-page" disabled><i class="fas fa-chevron-left"></i> Sebelumnya</button>
+                <span id="page-info">Halaman 1</span>
+                <button id="next-page">Selanjutnya <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal-content">
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+            <div class="modal-body" id="modal-body">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Rekber Confirmation Modal -->
+    <div class="modal-overlay" id="rekber-modal">
+        <div class="modal-content">
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <h3>Metode Transaksi</h3>
+                <p>Apakah Anda ingin menggunakan rekening bersama (Rekber) untuk transaksi ini?</p>
+                <div class="rekber-options">
+                    <button id="use-rekber" class="btn">Ya, Pakai Rekber</button>
+                    <button id="no-rekber" class="btn btn-outline">Tidak, Langsung ke Penjual</button>
+                </div>
+                <div class="rekber-warning">
+                    <p><i class="fas fa-exclamation-triangle"></i> Jika tidak menggunakan Rekber, admin tidak bertanggung jawab atas transaksi.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-content">
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <h3>Login Reseller</h3>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+                <div class="login-note">
+                    <p>Hanya untuk reseller yang terdaftar.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
